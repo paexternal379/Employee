@@ -1,10 +1,2 @@
 Hi, Agent. As part of the current task, please add additional sample entries to the Celery.txt file, based on the requirements outlined in the user request.
 
-
-Setup
-
-This section contains placeholder information about setting up the environment and prerequisites for using the dummy data.
-
-Example
-
-This section provides a placeholder example demonstrating how to utilize the dummy data effectively.
