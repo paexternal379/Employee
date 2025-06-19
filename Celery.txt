@@ -1,0 +1,74 @@
+### What is Django Celery?
+
+Celery is an asynchronous task queue/job queue used to execute tasks in the background. When integrated with **Django**, it allows you to:
+
+- Run time-consuming operations outside the main request-response cycle.
+- Schedule periodic tasks (like cron jobs).
+- Handle distributed workloads using message brokers.
+
+
+### How Django Works with Celery
+
+1. Django defines the task (e.g., sending an email, generating a report).
+2. Celery processes the task in the background using a **worker**.
+3. A message broker (like RabbitMQ or Redis) sends the task from Django to Celery.
+
+### Key Components
+
+ - Tasks: Python functions decorated with `@shared_task` or `@app.task`.
+ - Worker: A background process that listens for tasks and executes them.
+ - Broker: ddleware (usually Redis) that queues tasks between Django and Celery.
+ - Beat (optional): A scheduler for running periodic tasks.
+
+---
+
+### Example Setup**
+
+1. **Install Celery**:
+
+   ```bash
+   pip install celery redis
+   ```
+
+2. **In your Django project folder**, create a `celery.py` file:
+
+   ```python
+   # myproject/celery.py
+   import os
+   from celery import Celery
+
+   os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'myproject.settings')
+
+   app = Celery('myproject')
+   app.config_from_object('django.conf:settings', namespace='CELERY')
+   app.autodiscover_tasks()
+   ```
+
+3. **In `__init__.py` of your project**:
+
+   ```python
+   from .celery import app as celery_app
+   __all__ = ('celery_app',)
+   ```
+
+4. **Create a task** in an app:
+
+   ```python
+   # myapp/tasks.py
+   from celery import shared_task
+
+   @shared_task
+   def send_welcome_email(user_id):
+       # send email logic
+       return f"Email sent to user {user_id}"
+   ```
+
+5. **Run the worker**:
+
+   ```bash
+   celery -A myproject worker --loglevel=info
+   ```
+
+---
+
+Let me know if you'd like a hands-on example or periodic task (beat) setup too!
